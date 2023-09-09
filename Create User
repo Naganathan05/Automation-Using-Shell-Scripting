@@ -1,0 +1,55 @@
+#!/bin/bash
+
+# Script should be executed only with root user access
+if [ ${UID} -ne 0 ]
+then 
+   echo "Run the script with root"
+   exit 1
+fi
+
+# User should provide atleast one arguement as username
+if [ "${#}" -lt 1 ] 
+then
+   echo "Enter The Username at the right side of the command"
+fi
+
+# Store 1st Arguement as Username
+USER_NAME="${1}"
+
+# Incase of more than one arguement store them as comments
+shift
+COMMENT="${@}"
+
+# Create a Password
+PASSWORD=$(date +%s%N)
+
+#Create User
+useradd -c $COMMENT -m $USER_NAME
+
+# Check if the user is created or not
+if [ $? -ne 0 ]
+then 
+    echo "Account could not be created"
+    exit 1
+fi
+
+# Set the password for the user
+passwd $PASSWORD $USER_NAME
+
+# Check if the password is succesfully set or not
+if [ $? -ne 0 ]
+then
+    echo "Password not set"
+    exit 1
+fi
+
+# Ask Password change on first login
+passwd -e USER_NAME
+
+# Display the username, password and the host where the user was created
+echo
+echo "User Name: $USER_NAME"
+echo
+echo "Password: $PASSWORD"
+echo
+echo "Host Name: $(hostname)"
