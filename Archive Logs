@@ -1,0 +1,24 @@
+#!/bin/bash
+
+LOC=/home/files
+
+# Check whether given directory path is valid
+if [ ! -d $LOC ]
+then
+    echo "Directory Does Not Exist - $LOC"
+    exit 1
+fi
+
+# Check whether 'archive' file is created
+cd $LOC
+if [ ! -f archive ]
+then
+    touch archive
+fi
+# Find the list of files which are larger than 20 MB and compress them.
+for i in `find -type f -size +20M`
+do
+  echo "[$(date)] archiving $i ==> $LOC/archive"
+  gzip $i
+  mv $i.gz $LOC/archive
+done
