@@ -1,0 +1,15 @@
+#!/bin/bash
+
+#Monitoring the free fs disk space
+
+usage=$(df | grep "sda2" | awk '{print $5}' | tr -d %)
+limit=30
+mail_id="naganathan1555@gmail.com"
+
+# Check whether disk usage percentage is more than the limit that has been set, if then send ALERT mail to specified address
+if [ $usage -gt $limit ]
+then
+    echo "Warning, Disk Space Is Low - $usage" | mail -s "Disk Space Alert!" $mail_id
+else
+    echo "Usage percent is under limit"
+fi
