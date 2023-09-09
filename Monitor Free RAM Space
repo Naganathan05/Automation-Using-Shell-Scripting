@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# Calculate free RAM space in the device
+space=$(free | grep "Total" | awk '{print $4}')
+threshold=700
+
+# Check whether available free RAM space is more than threshold
+if [ space -lt threshold ]
+then
+    echo "Warning, RAM is Running Low"
+else
+    echo "RAM Space: $space"
+fi
